@@ -25,3 +25,24 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+  connect:
+    image: confluentinc/kafka-connect-datagen:latest
+    build:
+      context: .
+      dockerfile: Dockerfile-KafkaConnect
+    depends_on:
+      - broker
+      - zookeeper
+    ports:
+      - "8083:8083"
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: broker:29092
+      CONNECT_GROUP_ID: 'orders-datagen'
+      CONNECT_CONFIG_STORAGE_TOPIC: 'connect-configs'
+      CONNECT_OFFSET_STORAGE_TOPIC: 'connect-offsets'
+      CONNECT_STATUS_STORAGE_TOPIC: 'connect-status'
+      CONNECT_KEY_CONVERTER: 'org.apache.kafka.connect.storage.StringConverter'
+      CONNECT_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+      CONNECT_REST_ADVERTISED_HOST_NAME: 'localhost'
+      
+      
