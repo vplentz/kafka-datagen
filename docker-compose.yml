@@ -36,7 +36,8 @@ services:
       kafka-topics --bootstrap-server broker:29092 --list
 
       echo -e 'Creating kafka topics'
-      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic orders-datagen 
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic pageviews
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic users 
       kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --config cleanup.policy=compact --topic connect-configs
       kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --config cleanup.policy=compact --topic connect-status
       kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --config cleanup.policy=compact --topic connect-offsets
