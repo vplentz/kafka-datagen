@@ -25,6 +25,26 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+  init-kafka:
+    image: confluentinc/cp-kafka:7.0.1
+    depends_on:
+      - broker
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # blocks until kafka is reachable
+      kafka-topics --bootstrap-server broker:29092 --list
+
+      echo -e 'Creating kafka topics'
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic orders-datagen 
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --config cleanup.policy=compact --topic connect-configs
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --config cleanup.policy=compact --topic connect-status
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --config cleanup.policy=compact --topic connect-offsets
+
+
+      echo -e 'Successfully created the following topics:'
+      kafka-topics --bootstrap-server broker:29092 --list
+      "
   connect:
     image: confluentinc/kafka-connect-datagen:latest
     build:
@@ -33,6 +53,7 @@ services:
     depends_on:
       - broker
       - zookeeper
+      - init-kafka
     ports:
       - "8083:8083"
     environment:
