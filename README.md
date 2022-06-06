@@ -1,19 +1,18 @@
 # kafka-datagen
+Repository for testing kafka transformations with kafka local infraestructure setup using Docker.
 
-### To create topics:
-```kafka-topics --bootstrap-server broker:9092 --topic TOPIC_NAME```
+```
+kakfa-datagen
+|   docker-compose.yml -- Kafka Docker-compose Infraestructure (sets up the containers and creates the initial topics)
+|   Dockerfile-KafkaConnect -- KafkaConnect Docker with Datagen Connector installed 
+|   README.md -- :)
+└───SparkStructuredStreamming -- Stream Processing Notebooks using PySpark Structured Streamming + Kafka
+|   |PageviewsGroupByTransform.ipynb -- Notebook that consumes data from pageviews topic, groups it by userid and send it back to a topic called user_pageview_stats.
+|   | README.md -- Instruction on how to run Notebooks
+```
 
-### To consume from topics:
-```kafka-console-consume --bootstrap-server broker:9092 --topic TOPIC_NAME``` 
-* add ```--from-begginning``` if you want all messages;
-* add ```--property print.key=true`` if you want to print the keys.
-
-### To manualy produce to topics:
-```kafka-console-producer --bootstrap-server broker:9092 --topic TOPIC_NAME``` and then write your messages.
-
-### To start generating orders:
-```http POST http://localhost:8083/connectors @datagen-orders-config.json```
-### To check the status:
-```http http://localhost:8083/connectors/datagen-orders/status -b```
-### To stop generating orders:
-```http DELETE http://localhost:8083/connectors/datagen-orders -b```
+## Next Steps
+* (WIP) Add PySpark Structured Stream Processing;
+* (TODO) Add KSQL infraestructure;
+* (TODO) Add KSQL streamming processing;
+* (TODO) Add Kafka Streamming processing;
